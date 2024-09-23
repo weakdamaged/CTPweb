@@ -1,0 +1,117 @@
+		body {
+            background-color: #2c2c2c; /* Темно-серый фон */
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: #f0f0f0; /* Светло-серый текст */
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5em;
+        }
+
+        /* Якорные ссылки */
+        ul {
+			list-style-type: none;
+            margin-bottom: 50px;
+            padding: 20px;
+            border: 1px solid #444;
+            background-color: #3a3a3a; /* Более светлый серый фон для блоков */
+            border-radius: 10px;
+        }
+
+        ul li a {
+            color: #000;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        /* Общие стили для секций с аниме */
+        .anime {
+            margin-bottom: 50px;
+            padding: 20px;
+            border: 1px solid #444;
+            background-color: #3a3a3a; /* Более светлый серый фон для блоков */
+            border-radius: 10px;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .gallery img {
+            height: 200px;
+            width: auto; /* Сохранение пропорций картинок */
+            border-radius: 20px; /* Закруглённые края */
+        }
+
+        /* Стили для каждого аниме с разным шрифтом */
+        @font-face {
+            font-family: 'DeathNoteFont';
+            src: url('fonts/deathnote.ttf');
+        }
+
+        @font-face {
+            font-family: 'CodeGeassFont';
+            src: url('fonts/codegeass.ttf');
+        }
+
+        @font-face {
+            font-family: 'SoumaFont';
+            src: url('fonts/souma.ttf');
+        }
+
+        #deathnote p {
+            font-family: 'DeathNoteFont', sans-serif;
+            text-align: center; /* Описание для первого аниме по центру */
+            font-size: 1.1em;
+        }
+
+        #codegeass p {
+            font-family: 'CodeGeassFont', sans-serif;
+            text-align: justify; /* Описание для второго аниме по ширине */
+            font-size: 1.1em;
+        }
+
+        #souma p {
+            font-family: 'SoumaFont', sans-serif;
+            text-align: left; /* Описание для третьего аниме по левому краю */
+            font-size: 1.1em;
+        }
+
+        /* Дополнительные стили для жирного текста */
+        .bold-strong {
+            font-weight: bold;
+        }
+
+        .bold-b {
+            font-weight: normal;
+        }
+
+        .bold-b b {
+            font-weight: bold;
+        }
+
+        /* Гибкое центрирование контента */
+        .anime h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .anime p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
