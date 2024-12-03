@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкета оценки качества образовательного учреждения БГУИР</title>
+</head>
+<body>
+    <h1>Анкета оценки качества образовательного учреждения БГУИР</h1>
+
+    <form action="#" method="POST">
+        <fieldset>
+            <legend>Личные данные</legend>
+
+            <label for="name">ФИО:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <label for="phone">Телефон:</label>
+            <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890"><br><br>
+
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required><br><br>
+        </fieldset>
+
+        <fieldset>
+            <legend>Оценка качества учреждения</legend>
+
+            <p>Как вы оцениваете общий уровень образовательного процесса в БГУИР?</p>
+            <input type="radio" id="excellent" name="quality" value="excellent">
+            <label for="excellent">Отлично</label><br>
+            <input type="radio" id="good" name="quality" value="good">
+            <label for="good">Хорошо</label><br>
+            <input type="radio" id="satisfactory" name="quality" value="satisfactory">
+            <label for="satisfactory">Удовлетворительно</label><br>
+            <input type="radio" id="poor" name="quality" value="poor">
+            <label for="poor">Плохо</label><br><br>
+
+            <p>Оцените уровень профессиональной подготовки преподавательского состава:</p>
+            <input type="radio" id="prof-excellent" name="prof-quality" value="excellent">
+            <label for="prof-excellent">Отлично</label><br>
+            <input type="radio" id="prof-good" name="prof-quality" value="good">
+            <label for="prof-good">Хорошо</label><br>
+            <input type="radio" id="prof-satisfactory" name="prof-quality" value="satisfactory">
+            <label for="prof-satisfactory">Удовлетворительно</label><br>
+            <input type="radio" id="prof-poor" name="prof-quality" value="poor">
+            <label for="prof-poor">Плохо</label><br><br>
+
+            <label for="comments">Ваши комментарии и предложения по улучшению качества образования:</label><br>
+            <textarea id="comments" name="comments" rows="4" cols="50"></textarea><br><br>
+
+            <input type="checkbox" id="recommend" name="recommend" value="yes">
+            <label for="recommend">Рекомендовали бы БГУИР как образовательное учреждение другим?</label><br><br>
+        </fieldset>
+
+        <fieldset>
+            <legend>Загрузка файлов</legend>
+
+            <label for="file">Загрузить файл с вашим отзывом:</label>
+            <input type="file" id="file" name="file"><br><br>
+        </fieldset>
+
+        <input type="submit" value="Отправить">
+        <input type="reset" value="Очистить">
+    </form>
+</body>
+</html>

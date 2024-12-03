@@ -1,0 +1,73 @@
+html {
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  header {
+    background: rgb(52, 206, 142);
+    height: 100px;
+  }
+
+  h1 {
+    text-align: center;
+    color: white;
+    line-height: 100px;
+    margin: 0;
+  }
+
+  article {
+    padding: 10px;
+    margin: 10px;
+    background: rgba(16, 233, 215, 0.178);
+  }
+.grid {
+    display: grid;
+    grid-template-areas: 
+        "one two three three"
+        "one four three three"
+        "one five six seven"
+        "eight nine nine ten";
+}
+
+.grid article:nth-child(1) {
+    grid-area: one;
+}
+
+.grid article:nth-child(2) {
+    grid-area: two;
+}
+
+.grid article:nth-child(3) {
+    grid-area: three;
+}
+
+.grid article:nth-child(4) {
+    grid-area: four;
+}
+
+.grid article:nth-child(5) {
+    grid-area: five;
+}
+
+.grid article:nth-child(6) {
+    grid-area: six;
+}
+
+.grid article:nth-child(7) {
+    grid-area: seven;
+}
+
+.grid article:nth-child(8) {
+    grid-area: eight;
+}
+
+.grid article:nth-child(9) {
+    grid-area: nine;
+}
+
+.grid article:nth-child(10) {
+    grid-area: ten;
+}

@@ -1,0 +1,105 @@
+html {
+  font-family: sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+header {
+  background: rgb(52, 206, 142);
+  height: 100px;
+}
+
+h1 {
+  text-align: center;
+  color: white;
+  line-height: 100px;
+  margin: 0;
+}
+
+article {
+  padding: 10px;
+  margin: 10px;
+  background: rgba(16, 233, 215, 0.178);
+}
+
+@media screen and (min-width: 1400px) {
+  .adaptive {
+    display: grid;
+    grid-template-areas:
+      "one one two two"
+      "three three three three"
+      "four four five five"
+      "six seven eight nine";
+  }
+}
+
+@media screen and (max-width: 1399px) and (min-width: 700px) {
+  .adaptive {
+    display: grid;
+    grid-template-areas:
+      "one one"
+      "two two"
+      "three three"
+      "four five"
+      "six seven"
+      "eight nine";
+  }
+}
+
+@media screen and (max-width: 699px) {
+  .adaptive {
+    display: grid;
+    grid-template-areas:
+      "one"
+      "two"
+      "three"
+      "four"
+      "five"
+      "six"
+      "seven"
+      "eight"
+      "nine";
+  }
+}
+
+.adaptive article:nth-child(1) {
+  grid-area: one;
+}
+
+.adaptive article:nth-child(2) {
+  grid-area: two;
+}
+
+.adaptive article:nth-child(3) {
+  grid-area: three;
+}
+
+.adaptive article:nth-child(4) {
+  grid-area: four;
+}
+
+.adaptive article:nth-child(5) {
+  grid-area: five;
+}
+
+.adaptive article:nth-child(6) {
+  grid-area: six;
+}
+
+.adaptive article:nth-child(7) {
+  grid-area: seven;
+}
+
+.adaptive article:nth-child(8) {
+  grid-area: eight;
+}
+
+.adaptive article:nth-child(9) {
+  grid-area: nine;
+}
+
+.adaptive article:nth-child(10) {
+  grid-area: ten;
+}
