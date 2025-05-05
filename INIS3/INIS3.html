@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our T-Shirts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            font-weight: 300; 
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .shirt-card {
+            border: 6px solid rgb(2, 30, 83);
+            border-radius: 20px;
+            padding: 0; 
+            width: 250px;
+            text-align: center;
+        }
+
+        .shirt-card img {
+            border-radius: 20px;
+            width: 100%;
+            height: auto;
+            display: block; 
+            margin: 0; 
+        }
+
+        .shirt-card h3 {
+            text-align: left;
+            margin-left: 10px;
+            font-weight: 300;
+            font-size: 1.4em; 
+            color: rgb(2, 30, 83); 
+        }
+
+        .shirt-card .card-colors {
+            text-align: left;
+            margin-left: 10px;
+            font-weight: 300;
+            font-size: 0.9em; 
+            color: rgb(170, 168, 168); 
+        }
+
+        .btn {
+            background-color: rgb(2, 30, 83);
+            color: white;
+            padding: 10px;
+            margin: 8px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Our T-Shirts</h1>
+    <div class="container" id="shirtsContainer"></div>
+
+    <script src="shirts.js"></script>
+    <script>
+        function generateShirts() {
+            const container = document.getElementById('shirtsContainer');
+            shirts.forEach(shirt => {
+                const shirtCard = document.createElement('div');
+                shirtCard.classList.add('shirt-card');
+
+                const img = document.createElement('img');
+                img.src = shirt.colors?.white?.front || shirt.default.front;
+                img.alt = shirt.name;
+
+                const title = document.createElement('h3');
+                title.textContent = shirt.name;
+
+                const colors = document.createElement('p');
+                colors.className = 'card-colors';
+                const colorCount = Object.keys(shirt.colors || {}).length;
+                colors.textContent = `Available in ${colorCount} color${colorCount !== 1 ? 's' : ''}`;
+
+                const quickViewBtn = document.createElement('button');
+                quickViewBtn.classList.add('btn');
+                quickViewBtn.textContent = 'Quick View';
+
+                const seePageBtn = document.createElement('button');
+                seePageBtn.classList.add('btn');
+                seePageBtn.textContent = 'See Page';
+                seePageBtn.addEventListener('click', () => {
+                    localStorage.setItem('selectedShirt', JSON.stringify(shirt));
+                    window.location.href = 'details.html';
+                });
+
+                shirtCard.append(img, title, colors, quickViewBtn, seePageBtn);
+                container.appendChild(shirtCard);
+            });
+        }
+
+        generateShirts();
+    </script>
+</body>
+</html>

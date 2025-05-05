@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Shirt Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #fff;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        .container {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        img {
+            width: 250px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .details {
+            max-width: 400px;
+        }
+
+        .price {
+            font-size: 26px;
+            font-weight: bold;
+            color: #111;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #010f24;
+            font-weight: bold;
+            margin-bottom: 60px;
+        }
+
+        .options {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .options h3 {
+            margin: 0;
+            white-space: nowrap;
+            font-size: 14px;
+            color: gray;
+            font-weight: normal;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .button-group button {
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .side-buttons button {
+            background-color: #01183a;
+            color: white;
+        }
+
+        .side-buttons button:hover {
+            background-color: #003580;
+        }
+
+        .color-buttons button {
+            border: 3px solid #01183a;
+            height: 30px;
+            font-size: 12px;
+            color: black;
+            padding: 5px;
+            min-width: max-content;
+        }
+
+        .color-buttons button:hover {
+            transform: scale(1.1);
+        }
+
+        .color-white {
+            background-color: white;
+        }
+
+        .color-blue {
+            background-color: blue;
+        }
+
+        .color-green {
+            background-color: green;
+        }
+
+        .color-yellow {
+            background-color: yellow;
+        }
+
+        .color-red {
+            background-color: red;
+        }
+
+        .active {
+            outline: none;
+            border: 3px solid rgb(1, 0, 48);
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="shirt-name"></h1>
+    <div class="container">
+        <img id="shirt-image" src="" alt="T-Shirt">
+        <div class="details">
+            <p class="price" id="shirt-price"></p>
+            <p class="description">Type funny text.</p>
+
+            <div class="options">
+                <h3>Side:</h3>
+                <div class="button-group side-buttons">
+                    <button id="front-btn">Front</button>
+                    <button id="back-btn">Back</button>
+                </div>
+            </div>
+
+            <div class="options">
+                <h3>Color:</h3>
+                <div id="color-options" class="button-group color-buttons"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+            document.addEventListener('DOMContentLoaded', () => {
+            const shirt = JSON.parse(localStorage.getItem('selectedShirt'));
+
+            if (!shirt) {
+                document.body.innerHTML = '<h1>Ошибка: Футболка не найдена</h1>';
+                return;
+            }
+
+            document.getElementById('shirt-name').textContent = shirt.name;
+            document.getElementById('shirt-price').textContent = shirt.price;
+
+            const img = document.getElementById('shirt-image');
+            let currentSide = 'front';
+            img.src = shirt.colors.white.front;
+
+            document.getElementById('front-btn').addEventListener('click', () => {
+                currentSide = 'front';
+                img.src = shirt.colors[selectedColor][currentSide];
+            });
+
+            document.getElementById('back-btn').addEventListener('click', () => {
+                currentSide = 'back';
+                img.src = shirt.colors[selectedColor][currentSide];
+            });
+
+            const colorContainer = document.getElementById('color-options');
+            let selectedColor = 'white';
+
+            Object.keys(shirt.colors).forEach(color => {
+                const button = document.createElement('button');
+                button.textContent = color.charAt(0).toUpperCase() + color.slice(1);
+                button.classList.add(`color-${color}`);
+                if (color === 'white') button.classList.add('active');
+
+                button.addEventListener('click', () => {
+                    selectedColor = color;
+                    img.src = shirt.colors[selectedColor][currentSide];
+
+                    document.querySelectorAll('.color-buttons button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    button.classList.add('active');
+                });
+
+                colorContainer.appendChild(button);
+            });
+        });
+    </script>
+</body>
+
+</html>
