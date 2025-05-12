@@ -1,10 +1,11 @@
+// Получаем все цели
 const targets = document.querySelectorAll('.target');
 
 let currentDragged = null;
 let isSticky = false;
 let initialPosition = null;
 let isResizing = false;
-let minSize = 50; 
+let minSize = 50; // минимальный размер в px
 
 let onMoveHandler = null;
 let onEndHandler = null;
@@ -98,7 +99,7 @@ function handleTouchStart(event) {
 
   const tappedTarget = [...targets].find(t => t.contains(event.target));
 
-
+  // Быстрый тап (отключает sticky)
   if (
     now - lastTapTime < 300 &&
     lastTapPos &&
@@ -107,13 +108,13 @@ function handleTouchStart(event) {
   ) {
     disableSticky();
   } else if (isSticky) {
-
+    // sticky: двигаем текущий div
     if (currentDragged) {
       currentDragged.style.left = `${pos.x}px`;
       currentDragged.style.top = `${pos.y}px`;
     }
   } else if (tappedTarget) {
-
+    // старт обычного перетаскивания
     startDrag(pos, tappedTarget);
   }
 
@@ -166,10 +167,12 @@ function handleResize(event, target) {
   document.addEventListener('touchend', resizeEnd);
 }
 
+// Применяем ко всем целям
 targets.forEach((target) => {
   target.addEventListener('mousedown', (e) => startDrag({ x: e.clientX, y: e.clientY }, target));
   target.addEventListener('dblclick', (e) => enableSticky({ x: e.clientX, y: e.clientY }, target));
 
+  // Добавим уголок для изменения размера
   const resizer = document.createElement('div');
   resizer.style.position = 'absolute';
   resizer.style.right = '0';
