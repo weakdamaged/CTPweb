@@ -3,114 +3,188 @@ const targets = document.querySelectorAll('.target');
 let currentDragged = null;
 let isSticky = false;
 let initialPosition = null;
+let isResizing = false;
+let minSize = 50; 
 
-let onMouseMove = null;
-let onMouseClick = null;
+let onMoveHandler = null;
+let onEndHandler = null;
 
 function getTouchPos(e) {
   const touch = e.touches[0] || e.changedTouches[0];
   return { x: touch.clientX, y: touch.clientY };
 }
 
-function startDrag(event, target, isTouch = false) {
-  if (isSticky) return;
+function startDrag(pos, target) {
+  if (isSticky || isResizing) return;
   currentDragged = target;
   initialPosition = { top: target.offsetTop, left: target.offsetLeft };
 
-  const pos = isTouch ? getTouchPos(event) : { x: event.clientX, y: event.clientY };
   const offsetX = pos.x - target.offsetLeft;
   const offsetY = pos.y - target.offsetTop;
 
-  const moveHandler = (e) => {
-    const movePos = isTouch ? getTouchPos(e) : { x: e.clientX, y: e.clientY };
+  onMoveHandler = (e) => {
+    const movePos = e.type.includes('touch') ? getTouchPos(e) : { x: e.clientX, y: e.clientY };
     if (currentDragged) {
       currentDragged.style.left = `${movePos.x - offsetX}px`;
       currentDragged.style.top = `${movePos.y - offsetY}px`;
     }
   };
 
-  const upHandler = () => {
+  onEndHandler = () => {
     currentDragged = null;
-    document.removeEventListener(isTouch ? 'touchmove' : 'mousemove', moveHandler);
-    document.removeEventListener(isTouch ? 'touchend' : 'mouseup', upHandler);
+    document.removeEventListener('mousemove', onMoveHandler);
+    document.removeEventListener('mouseup', onEndHandler);
+    document.removeEventListener('touchmove', onMoveHandler);
+    document.removeEventListener('touchend', onEndHandler);
   };
 
-  document.addEventListener(isTouch ? 'touchmove' : 'mousemove', moveHandler);
-  document.addEventListener(isTouch ? 'touchend' : 'mouseup', upHandler);
+  document.addEventListener('mousemove', onMoveHandler);
+  document.addEventListener('mouseup', onEndHandler);
+  document.addEventListener('touchmove', onMoveHandler);
+  document.addEventListener('touchend', onEndHandler);
 }
 
-function stickToMouse(event, target, isTouch = false) {
-  if (isSticky) return;
+function enableSticky(pos, target) {
   isSticky = true;
   currentDragged = target;
   target.style.backgroundColor = 'green';
 
-  onMouseMove = (e) => {
-    const pos = isTouch ? getTouchPos(e) : { x: e.clientX, y: e.clientY };
-    if (isSticky && currentDragged) {
-      currentDragged.style.left = `${pos.x}px`;
-      currentDragged.style.top = `${pos.y}px`;
+  onMoveHandler = (e) => {
+    const movePos = e.type.includes('touch') ? getTouchPos(e) : { x: e.clientX, y: e.clientY };
+    if (currentDragged) {
+      currentDragged.style.left = `${movePos.x}px`;
+      currentDragged.style.top = `${movePos.y}px`;
     }
   };
 
-  onMouseClick = (e) => {
-    const endPos = isTouch ? getTouchPos(e) : { x: e.clientX, y: e.clientY };
-    isSticky = false;
-    if (currentDragged) currentDragged.style.backgroundColor = 'red';
-    currentDragged = null;
-
-    document.removeEventListener(isTouch ? 'touchmove' : 'mousemove', onMouseMove);
-    document.removeEventListener(isTouch ? 'touchend' : 'click', onMouseClick);
-  };
-
-  document.addEventListener(isTouch ? 'touchmove' : 'mousemove', onMouseMove);
-  document.addEventListener(isTouch ? 'touchend' : 'click', onMouseClick);
+  document.addEventListener('mousemove', onMoveHandler);
+  document.addEventListener('touchmove', onMoveHandler);
 }
 
-function resetPosition(event) {
-  if ((event.key === 'Escape' || (event.touches && event.touches.length > 1)) && currentDragged) {
+function disableSticky() {
+  if (currentDragged) {
+    currentDragged.style.backgroundColor = 'red';
+  }
+  isSticky = false;
+  currentDragged = null;
+  document.removeEventListener('mousemove', onMoveHandler);
+  document.removeEventListener('touchmove', onMoveHandler);
+}
+
+function resetPosition() {
+  if (currentDragged && initialPosition) {
     currentDragged.style.left = `${initialPosition.left}px`;
     currentDragged.style.top = `${initialPosition.top}px`;
     currentDragged.style.backgroundColor = 'red';
     currentDragged = null;
     isSticky = false;
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('click', onMouseClick);
+
+    document.removeEventListener('mousemove', onMoveHandler);
+    document.removeEventListener('touchmove', onMoveHandler);
   }
 }
 
-// Tap detection (touchstart + touchend in same spot)
-let lastTouchTime = 0;
-let lastTouchCoords = null;
+let lastTapTime = 0;
+let lastTapPos = null;
 
-function handleTouchStart(event, target) {
+function handleTouchStart(event) {
   if (event.touches.length > 1) {
-    resetPosition(event);
+    resetPosition();
     return;
   }
 
+  const pos = getTouchPos(event);
+  const now = Date.now();
+
+  const tappedTarget = [...targets].find(t => t.contains(event.target));
+
+
+  if (
+    now - lastTapTime < 300 &&
+    lastTapPos &&
+    Math.abs(pos.x - lastTapPos.x) < 10 &&
+    Math.abs(pos.y - lastTapPos.y) < 10
+  ) {
+    disableSticky();
+  } else if (isSticky) {
+
+    if (currentDragged) {
+      currentDragged.style.left = `${pos.x}px`;
+      currentDragged.style.top = `${pos.y}px`;
+    }
+  } else if (tappedTarget) {
+
+    startDrag(pos, tappedTarget);
+  }
+
+  lastTapTime = now;
+  lastTapPos = pos;
+}
+
+function handleTouchEnd(event) {
+  const tappedTarget = [...targets].find(t => t.contains(event.target));
   const now = Date.now();
   const pos = getTouchPos(event);
 
-  if (now - lastTouchTime < 300 &&
-      lastTouchCoords &&
-      Math.abs(pos.x - lastTouchCoords.x) < 10 &&
-      Math.abs(pos.y - lastTouchCoords.y) < 10) {
-    stickToMouse(event, target, true);
-  } else {
-    startDrag(event, target, true);
+  if (
+    now - lastTapTime < 300 &&
+    lastTapPos &&
+    Math.abs(pos.x - lastTapPos.x) < 10 &&
+    Math.abs(pos.y - lastTapPos.y) < 10 &&
+    tappedTarget
+  ) {
+    enableSticky(pos, tappedTarget);
   }
+}
 
-  lastTouchTime = now;
-  lastTouchCoords = pos;
+function handleResize(event, target) {
+  event.stopPropagation();
+  isResizing = true;
+  const startPos = getTouchPos(event);
+  const startWidth = target.offsetWidth;
+  const startHeight = target.offsetHeight;
+
+  const resizeMove = (e) => {
+    const pos = getTouchPos(e);
+    let newWidth = startWidth + (pos.x - startPos.x);
+    let newHeight = startHeight + (pos.y - startPos.y);
+
+    if (newWidth < minSize) newWidth = minSize;
+    if (newHeight < minSize) newHeight = minSize;
+
+    target.style.width = `${newWidth}px`;
+    target.style.height = `${newHeight}px`;
+  };
+
+  const resizeEnd = () => {
+    isResizing = false;
+    document.removeEventListener('touchmove', resizeMove);
+    document.removeEventListener('touchend', resizeEnd);
+  };
+
+  document.addEventListener('touchmove', resizeMove);
+  document.addEventListener('touchend', resizeEnd);
 }
 
 targets.forEach((target) => {
-  target.addEventListener('mousedown', (event) => startDrag(event, target));
-  target.addEventListener('dblclick', (event) => stickToMouse(event, target));
+  target.addEventListener('mousedown', (e) => startDrag({ x: e.clientX, y: e.clientY }, target));
+  target.addEventListener('dblclick', (e) => enableSticky({ x: e.clientX, y: e.clientY }, target));
 
-  target.addEventListener('touchstart', (event) => handleTouchStart(event, target));
+  const resizer = document.createElement('div');
+  resizer.style.position = 'absolute';
+  resizer.style.right = '0';
+  resizer.style.bottom = '0';
+  resizer.style.width = '15px';
+  resizer.style.height = '15px';
+  resizer.style.background = 'gray';
+  resizer.style.cursor = 'nwse-resize';
+  resizer.addEventListener('touchstart', (e) => handleResize(e, target));
+  target.appendChild(resizer);
 });
 
-document.addEventListener('keydown', resetPosition);
-document.addEventListener('touchstart', resetPosition, { passive: false });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') resetPosition();
+});
+
+document.addEventListener('touchstart', handleTouchStart, { passive: false });
+document.addEventListener('touchend', handleTouchEnd);
